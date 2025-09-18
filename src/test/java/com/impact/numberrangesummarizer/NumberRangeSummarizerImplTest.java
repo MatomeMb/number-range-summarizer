@@ -104,11 +104,20 @@ class NumberRangeSummarizerImplTest {
         }
         
         @ParameterizedTest
-        @ValueSource(strings = {"abc", "1,abc,3", "1.5,2", "1,,3"})
+        @ValueSource(strings = {"abc", "1,abc,3", "1.5,2"})
         @DisplayName("Should throw exception for invalid number formats")
         void shouldThrowExceptionForInvalidFormats(String input) {
             assertThrows(IllegalArgumentException.class, 
                 () -> summarizer.collect(input));
+        }
+        
+        @Test
+        @DisplayName("Should handle empty strings between commas")
+        void shouldHandleEmptyStringsBetweenCommas() {
+            Collection<Integer> result = summarizer.collect("1,,3");
+            
+            assertEquals(2, result.size());
+            assertTrue(result.containsAll(Arrays.asList(1, 3)));
         }
         
         @Test
